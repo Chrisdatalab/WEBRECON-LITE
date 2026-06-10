@@ -1,10 +1,18 @@
 from webrecon.crawler import crawler
 import webrecon.reporter.report_writer as reporter
 import argparse
-
+def check_URL(url):
+    if url is None:
+        return False
+    if (url.startswith("http://") or url.startswith("https://"))and " " not in url:
+        return True
+    return False
 parse=argparse.ArgumentParser("")
-parse.add_argument("-t", "--target")
+parse.add_argument("-t", "--target",required=True)
 args = parse.parse_args()
 #source='https://books.toscrape.com/'
-resolve=crawler.crawler_source_http(args.target)
-reporter.print_report(resolve)
+if check_URL(args.target):
+    result=crawler.crawler_source_http(args.target)
+else:
+    result=None
+reporter.print_report(result)
