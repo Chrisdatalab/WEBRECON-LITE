@@ -17,7 +17,7 @@ def extract_links(r,bs_link):
     else:
         web_title=None
     # Store response headers
-    web_serverHead=r.headers
+    web_serverHead=dict(r.headers)
     # Extract and normalize all links
     for a in soup.find_all("a"):
         href = a.get("href")
