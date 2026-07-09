@@ -22,4 +22,5 @@ if check_URL(args.target):
     reporter.save_json_report(result,"output/reports/"+args.output+".json")
 else:
     result=None
-reporter.print_report(result)
+reporter.print_summary(result)
+#reporter.print_report(result)
