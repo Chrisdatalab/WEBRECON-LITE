@@ -1,8 +1,8 @@
 from collections import deque
 from urllib.parse import urlparse, urldefrag
-from webrecon.extractor import link_extractor
+from webrecon.extractor import link_extractor,js_extractor
 from webrecon.utils import http_client
-from webrecon.analyzer import link_analyzer
+from webrecon.analyzer import link_analyzer, js_analyzer
 
 
 def normalize_url(url):
@@ -64,18 +64,20 @@ def crawler_source_http(source, depth=1, m_pages=20):
         visited_order.append(curr_link)
 
         result = link_extractor.extract_links(r, curr_link)
-
+        javascript_result = js_extractor.extract_javascript(r.text,curr_link)
         links = result.get("links", [])
 
-        link_analysis = link_analyzer.link_analysis(
-            links,
-            curr_link
-        )
-
+        link_analysis = link_analyzer.link_analysis(links,curr_link)
+        
+        javascript_analysis = js_analyzer.analyze_javascript(javascript_result,curr_link)
         result["url"] = curr_link
         result["depth"] = current_depth
         result["analysis"] = {
-            "links": link_analysis
+            "links": link_analysis,
+            "javascript": {
+                            "extracted": javascript_result,
+                            "analysis": javascript_analysis
+                        }
         }
 
         pages.append(result)
